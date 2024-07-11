@@ -16,14 +16,20 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage:storage ,fileFilter:fileFilter});
+var i=0;
 function attachRoutes(app){
     app.post('/uploader',upload.single('image'),(req,res)=>{
         if(req.headers.apikey !== "e1bd2282-f444-4893-b704-239d036110e4"){
             return res.status(403).json({status:0, message: "Provide Valid Apikey" });
         }
+        if(i==5){
+            i=0;
+            return res.status(503).send('<h1>503 Internal Server Error</h1>'); 
+        }
         if(!req.file){
             return res.status(400).json({ status:0, message: "Not allowed only png jpg jpeg are allowed to upload" });        
         }
+        i++;
         res.send({status:1,message:'File Uploaded Succesfully'});
     })
 }
