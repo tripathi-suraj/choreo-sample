@@ -1,8 +1,12 @@
 import cache from "../cache.mjs";
 import { v4 as uuidv4 } from "uuid";
+import {getConnection} from "../library/database.mjs";;
 
 function attachRoutes(app){
     app.get("/", (req, res) => {
+        getConnection(function(err,result){
+            console.log(err,result);
+        })
         return res.status(200).send("Hello POC");
     });
 

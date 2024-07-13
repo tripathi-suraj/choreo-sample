@@ -1,6 +1,7 @@
 import multer from "multer";
 import * as path from "path";
 import * as fs from "fs";
+import {apikeymiddleware} from "../middlewares/authwares.mjs";
 
 const fileFilter = (req, file, cb) => {
     if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) {
@@ -20,11 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage:storage ,fileFilter:fileFilter});
 var i=0;
 function attachRoutes(app){
-    console.log(process.vars);
-    app.post('/uploader',upload.single('image'),(req,res)=>{
-        /*if(req.headers.apikey !== "e1bd2282-f444-4893-b704-239d036110e4"){
-            return res.status(403).json({status:0, message: "Provide Valid Apikey" });
-        }*/
+    app.post('/uploader',apikeymiddleware,upload.single('image'),(req,res)=>{
         if(i==5){
             i=0;
             return res.status(503).send('<h1>503 Internal Server Error</h1>'); 
@@ -46,7 +43,13 @@ function attachRoutes(app){
     })
 
     app.get('/getfiles',(req,res)=>{
-        fs.readFileSync()
+        console.log(process.vars);
+        fs.readdir(`${process.vars.config.base}/uploads`,function(err,files){
+            if(err){
+                return res.send({status:0,error:err});
+            }
+            return res.status(200).send(files);
+        })
     })
 }
 

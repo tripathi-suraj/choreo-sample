@@ -22,8 +22,8 @@ process.autokill = false;
 const vars={};
 Object.assign(vars,config);
 vars.config.base = __dirname;
-
 process.vars = vars;
+
 
 setInterval(()=>{
   if(process.autokill){
