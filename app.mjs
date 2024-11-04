@@ -45,6 +45,12 @@ Uploader.attachRoutes(app);
 app.get("/healthz", (_, res) => {
   return res.sendStatus(200);
 });
+app.post('/static/page',(req,res)=>{
+  let data={
+    'fc671b2d-91a6-49c6-becd-d7e5f1a2279e':'My Pop'
+  }
+return res.status(200).send(data);  
+});
 
 app.use((err, _req, res, next) => {
   if (res.headersSent) {
